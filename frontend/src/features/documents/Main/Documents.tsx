@@ -1,20 +1,19 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { useSelector } from 'react-redux';
-import { selectDocument1, selectDocument2 } from '../selectors';
 import Document from './Document';
+import { RootState } from '../../../store';
 
 function Documents(): JSX.Element {
-  const document1 = useSelector(selectDocument1);
-  const document2 = useSelector(selectDocument2);
-
-  const documents = [document1, document2];
-  documents.sort((a, b) => Number(a.deliveryDate) - Number(b.deliveryDate));
+  // const { documents } = useSelector((state: RootState) => state.documentState);
+  const { documentsAll } = useSelector(
+    (state: RootState) => state.documentsAll
+  );
 
   return (
     <div>
       <h1>Таблица</h1>
       <div>
-        <Document documents={documents} />
+        {documentsAll.length > 0 && <Document documentsAll={documentsAll} />}
       </div>
     </div>
   );

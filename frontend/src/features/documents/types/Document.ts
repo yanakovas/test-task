@@ -7,6 +7,4 @@ type TDocument = {
   currency: string;
 };
 
-// export type DocumentId = Document['id'];
-
 export default TDocument;

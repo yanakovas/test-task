@@ -18,6 +18,27 @@ module.exports = {
         price: 300,
         currency: 'RUB',
       },
+      {
+        name: 'Дверь',
+        quantity: 12,
+        deliveryDate: '12.10.2023',
+        price: 300,
+        currency: 'RUB',
+      },
+      {
+        name: 'Ручка',
+        quantity: 12,
+        deliveryDate: '12.10.2023',
+        price: 300,
+        currency: 'RUB',
+      },
+      {
+        name: 'Окно',
+        quantity: 12,
+        deliveryDate: '12.10.2023',
+        price: 300,
+        currency: 'RUB',
+      },
     ]);
   },
 

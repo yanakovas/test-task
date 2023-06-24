@@ -1,43 +1,37 @@
-import React, { memo, useState } from 'react';
-import { DataGrid, GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import { memo, useState } from 'react';
+import {
+  DataGrid,
+  GridColDef,
+  GridRowSelectionModel,
+  GridRowsProp,
+} from '@mui/x-data-grid';
 import TDocument from '../types/Document';
 import Modal from '../Modal/Modal';
 
 type DocumentsProps = {
-  documents: TDocument[];
+  documentsAll: TDocument[];
 };
 
-function Document({ documents }: DocumentsProps): JSX.Element {
-  const [modal, setModal] = useState(false);
+function Document({ documentsAll }: DocumentsProps): JSX.Element {
+  const [rowSelectionModel, setRowSelectionModel] =
+    useState<GridRowSelectionModel>([]);
 
-  const allQuantity = documents.reduce(
+  const allQuantity = documentsAll.reduce(
     (accumulator, document) => accumulator + document.quantity,
     0
   );
 
-  const rows: GridRowsProp = [
-    {
-      id: 0,
-      name: documents[0].name,
-      quantity: documents[0].quantity,
-      deliveryDate: documents[0].deliveryDate,
-      price: documents[0].price,
-      currency: documents[0].currency,
-    },
-    {
-      id: 1,
-      name: documents[1].name,
-      quantity: documents[1].quantity,
-      deliveryDate: documents[1].deliveryDate,
-      price: documents[1].price,
-      currency: documents[1].currency,
-    },
-    {
-      id: 3,
-      name: 'total',
-      quantity: allQuantity,
-    },
-  ];
+  const rows: GridRowsProp = documentsAll.map((document) => {
+    console.log(document);
+    return {
+      id: document.id,
+      name: document.name,
+      quantity: document.quantity,
+      deliveryDate: document.deliveryDate,
+      price: document.price,
+      currency: document.currency,
+    };
+  });
 
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Name', width: 150 },
@@ -52,16 +46,25 @@ function Document({ documents }: DocumentsProps): JSX.Element {
       <DataGrid
         rows={rows}
         columns={columns}
+        checkboxSelection
+        onRowSelectionModelChange={(
+          newRowSelectionModel: GridRowSelectionModel
+        ) => {
+          setRowSelectionModel(newRowSelectionModel);
+        }}
+        rowSelectionModel={rowSelectionModel}
         initialState={{
           pagination: {
             paginationModel: { page: 0, pageSize: 5 },
           },
         }}
         pageSizeOptions={[5, 10]}
-        checkboxSelection
       />
       <div>
-        <Modal />
+        <p>Total quantity: {allQuantity}</p>
+      </div>
+      <div>
+        <Modal ids={rowSelectionModel as number[]} />
       </div>
     </div>
   );

@@ -1,13 +1,26 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
-export default function Modal(): JSX.Element {
-  const [open, setOpen] = React.useState(false);
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { RootState, useAppDispatch } from '../../../store';
+import { deleteDocumentById } from '../documentsSlice';
+
+export default function Modal({ ids }: { ids: number[] }): JSX.Element {
+  const dispatch = useAppDispatch();
+  const [open, setOpen] = useState(false);
+
+  const { documentsAll } = useSelector(
+    (state: RootState) => state.documentsAll
+  );
+
+  useEffect(() => {
+    console.log('ids', ids);
+  }, [ids]);
 
   const handleClickOpen = (): void => {
     setOpen(true);
@@ -17,10 +30,18 @@ export default function Modal(): JSX.Element {
     setOpen(false);
   };
 
+  const checkedDocuments =
+    documentsAll?.filter((doc) => ids.includes(doc.id)) ?? [];
+
+  const onPressApplyHandler = (): void => {
+    dispatch(deleteDocumentById(ids));
+    setOpen(false);
+  };
+
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open alert dialog
+        Аннулировать
       </Button>
       <Dialog
         open={open}
@@ -29,20 +50,19 @@ export default function Modal(): JSX.Element {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
+          Вы уверены, что хотите аннулировать товар(ы):
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+            {checkedDocuments.map((doc) => doc.name).join(',')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Disagree
+          <Button onClick={onPressApplyHandler} color="primary">
+            Применить
           </Button>
           <Button onClick={handleClose} color="primary" autoFocus>
-            Agree
+            Отклонить
           </Button>
         </DialogActions>
       </Dialog>
