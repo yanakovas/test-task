@@ -6,7 +6,7 @@ documentsRouter.get('/', async (req, res) => {
   try {
     const documents = await Document.findAll({
       order: [
-        ['createdAt', 'DESC'],
+        ['deliveryDate', 'DESC'],
         ['id', 'DESC'],
       ],
     });
